@@ -19,10 +19,12 @@ import {
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { api_login } from "../api";
+import { api_login } from "../utils/api";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface PropsLogin {
-  onSwitch: ()=>void,
+  onSwitch: ()=>void;
+  onChange: ()=>void
 }
 
 const formlogin = z.object({
@@ -37,7 +39,7 @@ const formlogin = z.object({
 
 type FormLogin = z.infer<typeof formlogin>
 
-const FormLog: React.FC<PropsLogin> = ({ onSwitch }: PropsLogin) => {
+const FormLog: React.FC<PropsLogin> = ({ onSwitch, onChange }: PropsLogin) => {
   const {
     register,
     handleSubmit,
@@ -50,11 +52,16 @@ const FormLog: React.FC<PropsLogin> = ({ onSwitch }: PropsLogin) => {
     },
     resolver: zodResolver(formlogin),
   });
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as any)?.from?.pathname ?? "/";
 
   const onSubmit: SubmitHandler<FormLogin> = async (data) => {
     try {
       const response = await api_login(data);
       console.log("Success:", response);
+      onChange()
+      navigate(from, { replace: true });
     } catch (error: any) {
       console.error("Error:", error);
       setError("root", {

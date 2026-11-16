@@ -21,30 +21,37 @@ import {
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { api_singin } from "../api";
+import { api_singin } from "../utils/api";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface PropsSingin {
     onSwitch: () => void;
+    onChange: () => void
 }
 
 const formSingIn = z.object({
     name: z.string().min(1,{message:"Il nome deve essere di almeno un carattere"}),
     surname: z.string().min(1,{message:"Il cognome deve essere di almeno un carattere"}),
+    birthdate:z.date({ error: "Seleziona la data di nascita" })
+                .max(new Date(), "La data non può essere nel futuro"),
     email: z.email("invalid email address"),
     password: z.string()
-    .min(8,{message: "la password deve avere almeno 8 caratteri"}).regex(/[a-z]/, { message: 'Deve contenere almeno una lettera minuscola' })
+    .min(8,{message: "la password deve avere almeno 8 caratteri"})
+    .regex(/[a-z]/, { message: 'Deve contenere almeno una lettera minuscola' })
     .regex(/[0-9]/, { message: 'Deve contenere almeno un numero' })
     .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, {
         message: 'Deve contenere almeno un carattere speciale',
     }),
-    birthdate:z.date({ error: "Seleziona la data di nascita" })
-                .max(new Date(), "La data non può essere nel futuro"),
-})
+    confirPassword:z.string()
+}).refine((data) => data.password === data.confirPassword, {
+    message: "La password deve essere uguale",
+    path: ['confirmPassword'],
+  });
 
 type FormSingIn = z.infer<typeof formSingIn>
 
 
-const FormSI: React.FC<PropsSingin> = ({ onSwitch }) => {
+const FormSI: React.FC<PropsSingin> = ({ onSwitch, onChange }) => {
     const {
         control,
         register,
@@ -60,12 +67,16 @@ const FormSI: React.FC<PropsSingin> = ({ onSwitch }) => {
         },
         resolver: zodResolver(formSingIn),
     });
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = (location.state as any)?.from?.pathname ?? "/";
 
     const onSubmit: SubmitHandler<FormSingIn> = async (data) =>{
         try {
             const response = await api_singin(data);
             console.log("Success:", response);
-              
+            onChange()
+            navigate(from, { replace: true });
             } catch (error: any) {
                 console.error("Error:", error);
                 setError("root", {
@@ -99,21 +110,6 @@ const FormSI: React.FC<PropsSingin> = ({ onSwitch }) => {
                             {errors.surname && (<p style={{ color: "orangered" }}>{errors.surname.message}</p>)}
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email*</Label>
-                        <Input {...register("email")}/>
-                        {errors.email && (<p style={{ color: "orangered" }}>{errors.email.message}</p>)}
-                    </div>
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password*</Label>
-                                <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                                Forgot your password?
-                                </a>
-                        </div>
-                        <Input {...register("password")}/>
-                        {errors.password && (<p style={{ color: "orangered" }}>{errors.password.message}</p>)}
-                    </div>
-                    <div className="grid gap-2">
                         <Label htmlFor="Birth date">Birth date*</Label>
                         <Controller
                             control={control}
@@ -130,6 +126,31 @@ const FormSI: React.FC<PropsSingin> = ({ onSwitch }) => {
                             )}
                         />
                         {errors.birthdate && (<p style={{ color: "orangered" }}>{errors.birthdate.message}</p>)}
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="email">Email*</Label>
+                        <Input {...register("email")}/>
+                        {errors.email && (<p style={{ color: "orangered" }}>{errors.email.message}</p>)}
+                    </div>
+                    <div className="grid gap-2">
+                        <div className="flex items-center">
+                            <Label htmlFor="password">Password*</Label>
+                                <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                                Forgot your password?
+                                </a>
+                        </div>
+                        <Input {...register("password")}/>
+                        {errors.password && (<p style={{ color: "orangered" }}>{errors.password.message}</p>)}
+                    </div>
+                    <div className="grid gap-2">
+                        <div className="flex items-center">
+                            <Label htmlFor="confirPassword">Conferma la password*</Label>
+                                <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                                Forgot your password?
+                                </a>
+                        </div>
+                        <Input {...register("confirPassword")}/>
+                        {errors.confirPassword && (<p style={{ color: "orangered" }}>{errors.confirPassword.message}</p>)}
                     </div>
                     </div>
                 </form>
