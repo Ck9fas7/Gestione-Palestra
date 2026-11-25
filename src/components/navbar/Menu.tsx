@@ -1,4 +1,4 @@
-import '../../styles/menu.css'
+import '@/styles/menu.css'
 import { Link } from "react-router-dom"
 
 
@@ -9,6 +9,7 @@ interface MenuProps {
 export function Menu({ open }:MenuProps) {
   return (
     <nav className={`menu${open ? ' menu--open' : ''}`}>
+        <Link to="/">Homepage</Link>
         <Link to="/settings">Settings</Link>
         <Link to="/machine">Macchinari</Link>
         <a href="#works">Allenamento</a>
@@ -16,5 +17,3 @@ export function Menu({ open }:MenuProps) {
     </nav>
   );
 }
-
-

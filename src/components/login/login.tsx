@@ -1,6 +1,6 @@
 import FormLog from "./FormLog";
 import FormSI from "./FormSingIn";
-import "../../styles/login.css"
+import "@/styles/login.css"
 import { useMediaQuery } from "../utils/useMediaQuery";
 import { useState } from "react";
 

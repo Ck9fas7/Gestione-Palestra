@@ -42,6 +42,7 @@ export function FullMenu({onClick}:PropsLogout){
                     <b>Sito Palestra</b>
 
                 <div className="navbar-pill">
+                    <Link to="/">Homepage</Link>
                     <Link to="/machine">Macchinari</Link>
                     <a href="#works">Allenamento</a>
                     <a href="#price">Alimentazione</a>

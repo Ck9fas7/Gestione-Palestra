@@ -27,7 +27,7 @@ export function ChartProgression({ name, value, goal = 1, unit, small = false }:
   return (
     <ChartContainer
       config={config}
-      className="aspect-square w-full max-w-[220px] mx-auto"
+      className="aspect-square w-full mx-auto"
     >
       <RadialBarChart
         data={data}

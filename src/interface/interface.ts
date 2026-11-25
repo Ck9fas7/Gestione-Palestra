@@ -53,7 +53,7 @@ export type MachineParams = {
     id:number,
     marchio:string,
     nome:string,
-    descizione:string,
+    descrizione:string,
     imm:string,
     imm_what_train:string,
     accessiori:string

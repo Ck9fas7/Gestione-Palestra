@@ -1,7 +1,7 @@
 import { useMediaQuery } from "../utils/useMediaQuery";
 import { FullMenu } from "./FullMenu";
 import { HamburgerMenu } from "./HamburgerMenu";
-import "../../styles/navbar.css"
+import "@/styles/navbar.css"
 
 interface PropsLogout {
   onChange: ()=>void

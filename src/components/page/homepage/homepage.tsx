@@ -1,4 +1,4 @@
-import "../../../styles/homepage.css"
+import "@/styles/homepage.css"
 import {
   Card,
   CardContent,
@@ -31,6 +31,7 @@ export function Homepage ({onChange}:PropsLogout) {
         logged && user?.id ? "/api/userdata" : null,
         { method: "POST" }
     )
+    if (data) sessionStorage.setItem("userdata", JSON.stringify(data))
 
     console.log(data)
     const [date, setDate] = useState<Date | undefined>(new Date())
@@ -56,7 +57,7 @@ export function Homepage ({onChange}:PropsLogout) {
             Bentornato {user ? <b>{user.name}</b> : <b>Utente</b>}
         </h1>
         <div className="container-homepage">
-            <Card className="border-var(--color-background)">
+            <Card className="border-2 border-[var(--color-background)]">
                 <CardContent>
                     <div className="container-modal">
                         <div className="calendar-div">
@@ -70,7 +71,7 @@ export function Homepage ({onChange}:PropsLogout) {
                                 }}
                                 onSelect={setDate}
                                 // Scala --cell-size da 24px (schermi stretti) a 36px (desktop) e forza w-full
-                                className="w-full rounded-lg border p-2 sm:p-3 [--cell-size:clamp(1.65rem,8vw,2.25rem)]"
+                                className="w-full rounded-lg border-2 border-[var(--color-background)] p-2 sm:p-3 [--cell-size:clamp(1.65rem,8vw,2.25rem)]"
                                 weekStartsOn={1}
                                 locale={it}
                                 captionLayout="dropdown"
@@ -96,12 +97,12 @@ export function Homepage ({onChange}:PropsLogout) {
                     
                 </CardContent>
             </Card>
-            <Card>
+            <Card className="border-2 border-[var(--color-background)]">
                 <CardContent>
                     <div className="container-modal">
                         <div className="chart-div">
                             <div className="chart-left">
-                                <div className="chart-row">
+                                <div className="chart-row w-full">
                                     <span className="chart-label">Kcal</span>
                                 <ChartProgression name="kcal" value={ foodParam.kcal} goal={goals? goals.goal_kcal : 1} unit="kcal"/>
                                 </div>
@@ -128,8 +129,6 @@ export function Homepage ({onChange}:PropsLogout) {
                             </div>
                         </div>
                         <div className="other-div">
-                            <div className="calendar-div">
-                            </div>
                             <div className="add-div">
                                 <ModalComp type="food" onSaved={refetch}/>
                             </div>

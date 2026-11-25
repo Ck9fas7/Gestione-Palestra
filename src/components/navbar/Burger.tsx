@@ -1,4 +1,4 @@
-import "../../styles/burger.css"
+import "@/styles/burger.css"
 
 interface BurgerProps {
   open:boolean,
